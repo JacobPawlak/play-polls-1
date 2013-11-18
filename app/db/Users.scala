@@ -30,6 +30,27 @@ object Users {
       }.headOption
     }
   }
+  
+  val usernameQuery = "SELECT id, username, first, last FROM users WHERE username={username}"
+  def getByUsername(username: String): Option[User] = {
+    val query = SQL(usernameQuery).on('username -> username)
+    DB.withConnection { implicit c => 
+      query().map {
+        case Row(theId: Long, username: String, Some(first: String), Some(last: String)) => User(theId, username, first, last)
+      }.headOption  
+    }
+  }
+  
+  val passwordUpdate = "UPDATE users SET pwHash={pwHash} WHERE id={id}"
+  def setPassword(id: Long, newPassword: String) {
+    
+  }
+  def setPassword(username: String, newPassword: String) {
+    getByUsername(username).map((u: User) => setPassword(u, newPassword))
+  }
+  def setPassword(user: User, newPassword: String) {
+    setPassword(user.id, newPassword)
+  }
 
   // SQL statements
   // Note that these use Scala's multi-line strings and the

@@ -9,6 +9,7 @@ libraryDependencies ++= Seq(
   anorm,
   cache,
   "com.h2database" % "h2" % "1.3.174",
+  "org.mindrot" % "jbcrypt" % "0.3m",
   "org.dupontmanual" %% "dm-forms" % "0.2-SNAPSHOT"
 )     
 

@@ -1,5 +1,6 @@
-import java.io.File
+package db
 
+import java.io.File
 import db._
 
 object TestData {
