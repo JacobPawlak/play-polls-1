@@ -43,13 +43,32 @@ object Users {
   
   val passwordUpdate = "UPDATE users SET pwHash={pwHash} WHERE id={id}"
   def setPassword(id: Long, newPassword: String) {
-    
+    DB.withConnection { implicit c =>
+      SQL(passwordUpdate).on('pwHash -> PasswordFramework.hash(newPassword), 'id -> id).execute()  
+    }
   }
   def setPassword(username: String, newPassword: String) {
     getByUsername(username).map((u: User) => setPassword(u, newPassword))
   }
   def setPassword(user: User, newPassword: String) {
     setPassword(user.id, newPassword)
+  }
+  
+  val getPassword = "SELECT pwHash FROM users WHERE id={id}"
+  def checkPassword(id: Long, password: String): Boolean = {
+    val query = SQL(getPassword).on('id -> id)
+    DB.withConnection { implicit c =>
+      val pwHash: Option[String] = query().map {
+        case Row(Some(pw: String)) => pw
+      }.headOption
+      pwHash.map(encoded => PasswordFramework.checks(password, encoded)).getOrElse(false)
+    }
+  }
+  def checkPassword(username: String, password: String): Boolean = {
+    getByUsername(username).map((u: User) => checkPassword(u, password)).getOrElse(false)
+  }
+  def checkPassword(u: User, password: String): Boolean = {
+    checkPassword(u.id, password)
   }
 
   // SQL statements

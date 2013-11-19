@@ -23,5 +23,9 @@ object TestData {
     Users.addUser("lorgana01", "Leia", "Organa")
     if (debug) println("  c3po, See, Threepio")
     Users.addUser("c3po", "See", "Threepio")
+    Users.setPassword("lskywalk01", "theforce")
+    Users.setPassword("hsolo01", "chewie")
+    Users.setPassword("lorgana01", "alderaan")
+    Users.setPassword("c3po", "r2d2")
   }
 }

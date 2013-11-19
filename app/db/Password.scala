@@ -13,6 +13,9 @@ object PasswordFramework {
     rand.nextBytes(result)
     result
   }
+  
+  def hash(raw: String): String = Pbkdf2WithHmacSha1.encode(raw)
+  def checks(raw: String, encoded: String): Boolean = Pbkdf2WithHmacSha1.checks(raw, encoded)
 }
 
 /** A PasswordScheme provides a non-reversible way to turn a given String into
